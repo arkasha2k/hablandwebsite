@@ -10,7 +10,7 @@
         "laravel/tinker": "^2.10"
     },
     "require-dev": {
-        "fakerphp/faker": "^9.2",
+        "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.2",
         "laravel/pint": "^1.13",
         "mockery/mockery": "^1.6",
