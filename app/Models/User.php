@@ -64,6 +64,18 @@ class User extends Authenticatable
             . '&size=' . $size . '&direction=' . $direction;
     }
 
+    /**
+     * Заглушка аватара: стабильный «рандомный» эмодзи,
+     * детерминированно зависящий от ника игрока.
+     */
+    public function getEmojiAttribute(): string
+    {
+        $pool = ['😀','😎','🤠','😺','🐸','🦊','🐼','🐧','🦄','🐙',
+                 '👾','🤖','🎃','⚡','🔥','💎','🍕','🌈','⭐','🎮'];
+
+        return $pool[crc32(mb_strtolower($this->username)) % count($pool)];
+    }
+
     public function isOnline(): bool
     {
         return $this->last_online && $this->last_online->greaterThan(now()->subMinutes(5));

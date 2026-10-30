@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Hashing\AbstractHasher;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,6 +16,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Собственная тема пагинации: resources/views/vendor/pagination/default.blade.php
+        Paginator::defaultView('pagination::default');
+        Paginator::defaultSimpleView('pagination::simple-default');
         // Драйвер под ретро-отели: пароли в БД чаще всего хранятся как md5(пароль)
         Hash::extend('habbo-md5', fn () => new class extends AbstractHasher {
             public function make(#[\SensitiveParameter] $value, array $options = []): string

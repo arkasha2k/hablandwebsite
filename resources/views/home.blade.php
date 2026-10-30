@@ -75,13 +75,12 @@
     </div>
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
         @foreach($newest as $p)
-            <a href="{{ route('player.show', $p->username) }}" class="card card-hover p-4 text-center">
+            <a href="{{ route('player.show', $p->username) }}" class="card card-hover p-4 text-center no-underline text-inherit">
                 <div class="floaty inline-block">
-                    <img src="{{ $p->getAvatarUrl() }}" alt="{{ $p->username }}" loading="lazy" width="64" height="110"
-                         class="rounded-xl bg-gradient-to-b from-violet-500/25 to-transparent">
+                    <x-avatar :player="$p" size="md" />
                 </div>
                 <div class="mt-3 font-extrabold text-sm truncate">{{ $p->username }}</div>
-                <div class="small text-mute truncate">«{{ $p->motto }}»</div>
+                <div class="small text-mute truncate">«{{ $p->motto ?: 'Без миссии' }}»</div>
             </a>
         @endforeach
     </div>
@@ -94,7 +93,7 @@
         @foreach($richest as $i => $p)
             <a href="{{ route('player.show', $p->username) }}" class="card card-hover flex items-center gap-3 p-3.5">
                 <span class="w-8 text-center font-display text-sm font-bold {{ $i < 3 ? 'grad-text' : 'text-mute' }}">{{ $i + 1 }}</span>
-                <img src="{{ $p->getAvatarUrl(1) }}" alt="" width="44" height="44" class="rounded-lg bg-violet-500/15" loading="lazy">
+                <x-avatar :player="$p" size="sm" />
                 <span class="min-w-0">
                     <span class="block font-extrabold text-sm truncate">{{ $p->username }}</span>
                     <span class="small text-mute">{{ $p->rank_name }}</span>

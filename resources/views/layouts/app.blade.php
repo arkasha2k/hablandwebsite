@@ -162,17 +162,22 @@
             </a>
 
             <nav class="hidden md:flex items-center gap-1 text-sm font-bold text-mute" aria-label="Основная навигация">
-                <a href="{{ route('home') }}" class="px-3 py-2 rounded-lg hover:text-white hover:bg-white/5 transition">Главная</a>
-                <a href="{{ route('players.index') }}" class="px-3 py-2 rounded-lg hover:text-white hover:bg-white/5 transition">Игроки</a>
+                <a href="{{ route('home') }}" @if(request()->routeIs('home')) aria-current="page" @endif
+                   class="px-3 py-2 rounded-lg transition {{ request()->routeIs('home') ? 'text-white bg-white/10' : 'hover:text-white hover:bg-white/5' }}">Главная</a>
+                <a href="{{ route('players.index') }}" @if(request()->routeIs('players.*')) aria-current="page" @endif
+                   class="px-3 py-2 rounded-lg transition {{ request()->routeIs('players.*') ? 'text-white bg-white/10' : 'hover:text-white hover:bg-white/5' }}">Игроки</a>
                 @auth
-                    <a href="{{ route('play') }}" class="btn btn-cyan !py-2.5 !px-5 !text-[10px] ml-1">▶ В ИГРУ</a>
-                    <a href="{{ route('me') }}" class="px-3 py-2 rounded-lg hover:text-white hover:bg-white/5 transition">Профиль</a>
+                    <a href="{{ route('play') }}" @if(request()->routeIs('play')) aria-current="page" @endif
+                       class="btn btn-cyan !py-2.5 !px-5 !text-[10px] ml-1">▶ В ИГРУ</a>
+                    <a href="{{ route('me') }}" @if(request()->routeIs('me', 'player.show')) aria-current="page" @endif
+                       class="px-3 py-2 rounded-lg transition {{ request()->routeIs('me', 'player.show') ? 'text-white bg-white/10' : 'hover:text-white hover:bg-white/5' }}">Профиль</a>
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
                         <button class="btn btn-ghost !py-2.5 !px-5 !text-[10px] ml-1">ВЫХОД</button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="px-3 py-2 rounded-lg hover:text-white transition">Вход</a>
+                    <a href="{{ route('login') }}" @if(request()->routeIs('login')) aria-current="page" @endif
+                       class="px-3 py-2 rounded-lg transition {{ request()->routeIs('login') ? 'text-white bg-white/10' : 'hover:text-white' }}">Вход</a>
                     <a href="{{ route('register') }}" class="btn !py-2.5 !px-5 !text-[10px] ml-1">ИГРАТЬ</a>
                 @endauth
             </nav>
@@ -184,8 +189,10 @@
 
         <nav id="mobileMenu" class="md:hidden hidden border-t border-line bg-panel/95 backdrop-blur-md" aria-label="Мобильная навигация">
             <div class="px-4 py-3 flex flex-col gap-1 text-sm font-bold">
-                <a href="{{ route('home') }}" class="px-3 py-2.5 rounded-lg hover:bg-white/5 transition">Главная</a>
-                <a href="{{ route('players.index') }}" class="px-3 py-2.5 rounded-lg hover:bg-white/5 transition">Игроки</a>
+                <a href="{{ route('home') }}" @if(request()->routeIs('home')) aria-current="page" @endif
+                   class="px-3 py-2.5 rounded-lg transition {{ request()->routeIs('home') ? 'text-white bg-white/10' : 'hover:bg-white/5' }}">Главная</a>
+                <a href="{{ route('players.index') }}" @if(request()->routeIs('players.*', 'player.*')) aria-current="page" @endif
+                   class="px-3 py-2.5 rounded-lg transition {{ request()->routeIs('players.*', 'player.*') ? 'text-white bg-white/10' : 'hover:bg-white/5' }}">Игроки</a>
                 @auth
                     <a href="{{ route('play') }}" class="btn btn-cyan w-full mt-2">▶ В ИГРУ</a>
                     <a href="{{ route('me') }}" class="px-3 py-2.5 rounded-lg hover:bg-white/5 transition">Мой профиль</a>

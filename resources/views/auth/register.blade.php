@@ -12,8 +12,11 @@
         </div>
 
         @if($errors->any())
-            <div class="rounded-xl border border-rose-400/40 bg-rose-500/10 px-4 py-3 mb-5 small text-rose-300 space-y-1">
-                @foreach($errors->all() as $e) <div>✖ {{ $e }}</div> @endforeach
+            <div class="rounded-xl border border-rose-400/40 bg-rose-500/10 px-4 py-3 mb-5 small text-rose-300">
+                <div class="font-extrabold mb-1">Проверь данные:</div>
+                <ul class="list-disc list-inside space-y-0.5 marker:text-rose-400/70">
+                    @foreach($errors->all() as $e) <li>{{ $e }}</li> @endforeach
+                </ul>
             </div>
         @endif
 
@@ -21,40 +24,61 @@
             @csrf
             <div>
                 <label for="username" class="block small font-extrabold uppercase tracking-wider text-mute mb-2">Никнейм</label>
-                <input id="username" name="username" value="{{ old('username') }}" class="field" maxlength="16" placeholder="Латиница, цифры, _ и -" required autofocus autocomplete="username">
+                <input id="username" name="username" value="{{ old('username') }}"
+                       class="field {{ $errors->has('username') ? '!border-rose-400' : '' }}"
+                       maxlength="16" placeholder="Латиница, цифры, _ и -" required autofocus autocomplete="username"
+                       aria-required="true" aria-describedby="username-hint"
+                       @if($errors->has('username')) aria-invalid="true" aria-describedby="username-error" @endif>
+                @error('username')
+                    <p id="username-error" class="small text-rose-300 mt-1.5 font-bold">✖ {{ $message }}</p>
+                @else
+                    <p id="username-hint" class="small text-mute mt-1.5">3–16 символов: латиница, цифры, «_» и «-»</p>
+                @enderror
             </div>
             <div>
                 <label for="mail" class="block small font-extrabold uppercase tracking-wider text-mute mb-2">E-mail</label>
-                <input id="mail" type="email" name="mail" value="{{ old('mail') }}" class="field" placeholder="you@example.com" required autocomplete="email">
+                <input id="mail" type="email" name="mail" value="{{ old('mail') }}"
+                       class="field {{ $errors->has('mail') ? '!border-rose-400' : '' }}"
+                       placeholder="you@example.com" required autocomplete="email"
+                       aria-required="true" @if($errors->has('mail')) aria-invalid="true" aria-describedby="mail-error" @endif>
+                @error('mail') <p id="mail-error" class="small text-rose-300 mt-1.5 font-bold">✖ {{ $message }}</p> @enderror
             </div>
             <div class="grid sm:grid-cols-2 gap-5">
                 <div>
                     <label for="password" class="block small font-extrabold uppercase tracking-wider text-mute mb-2">Пароль</label>
-                    <input id="password" type="password" name="password" class="field" placeholder="Мин. 6 символов" required autocomplete="new-password">
+                    <input id="password" type="password" name="password"
+                           class="field {{ $errors->has('password') ? '!border-rose-400' : '' }}"
+                           placeholder="Мин. 6 символов" required autocomplete="new-password"
+                           aria-required="true" @if($errors->has('password')) aria-invalid="true" aria-describedby="password-error" @endif>
+                    @error('password') <p id="password-error" class="small text-rose-300 mt-1.5 font-bold">✖ {{ $message }}</p> @enderror
                 </div>
                 <div>
                     <label for="password_confirmation" class="block small font-extrabold uppercase tracking-wider text-mute mb-2">Ещё раз</label>
-                    <input id="password_confirmation" type="password" name="password_confirmation" class="field" placeholder="Повтори" required autocomplete="new-password">
+                    <input id="password_confirmation" type="password" name="password_confirmation"
+                           class="field {{ $errors->has('password') ? '!border-rose-400' : '' }}"
+                           placeholder="Повтори" required autocomplete="new-password" aria-required="true">
                 </div>
             </div>
             <div>
-                <span class="block small font-extrabold uppercase tracking-wider text-mute mb-2">Персонаж</span>
-                <div class="grid grid-cols-2 gap-3">
+                <span id="gender-label" class="block small font-extrabold uppercase tracking-wider text-mute mb-2">Персонаж</span>
+                <div class="grid grid-cols-2 gap-3" role="radiogroup" aria-labelledby="gender-label"
+                     @if($errors->has('gender')) aria-describedby="gender-error" @endif>
                     <label class="cursor-pointer">
-                        <input type="radio" name="gender" value="M" class="hidden peer" @checked(old('gender') === 'M') required>
+                        <input type="radio" name="gender" value="M" class="hidden peer" @checked(old('gender', 'M') === 'M') required>
                         <div class="rounded-xl border-2 border-line bg-ink/70 p-3 text-center transition peer-checked:border-violet-500 peer-checked:bg-violet-500/15 hover:border-violet-400/50">
-                            <img src="https://www.habbo.com.tr/habbo-imaging/avatarimage?figure=hr-115-42.hd-190-1.ch-215-62.lg-285-91.sh-290-62&direction=2" alt="Мужской персонаж" class="mx-auto h-24" width="64" height="96">
+                            <span class="mx-auto h-24 flex items-center justify-center text-6xl select-none" aria-hidden="true">🧍‍♂️</span>
                             <div class="mt-2 text-sm font-extrabold">Мужской</div>
                         </div>
                     </label>
                     <label class="cursor-pointer">
                         <input type="radio" name="gender" value="F" class="hidden peer" @checked(old('gender') === 'F')>
                         <div class="rounded-xl border-2 border-line bg-ink/70 p-3 text-center transition peer-checked:border-fuchsia-500 peer-checked:bg-fuchsia-500/15 hover:border-fuchsia-400/50">
-                            <img src="https://www.habbo.com.tr/habbo-imaging/avatarimage?figure=hr-540-42.hd-605-1.ch-645-62.lg-715-91.sh-735-62&direction=2" alt="Женский персонаж" class="mx-auto h-24" width="64" height="96">
+                            <span class="mx-auto h-24 flex items-center justify-center text-6xl select-none" aria-hidden="true">🧍‍♀️</span>
                             <div class="mt-2 text-sm font-extrabold">Женский</div>
                         </div>
                     </label>
                 </div>
+                @error('gender') <p id="gender-error" class="small text-rose-300 mt-1.5 font-bold">✖ {{ $message }}</p> @enderror
             </div>
             <button class="btn w-full">▶ ЗАСЕЛИТЬСЯ</button>
         </form>

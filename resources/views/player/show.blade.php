@@ -14,7 +14,7 @@
             <div class="flex flex-col sm:flex-row gap-5 -mt-12">
                 <div class="shrink-0 mx-auto sm:mx-0">
                     <div class="floaty inline-block rounded-2xl bg-ink/80 border border-line p-3 shadow-[0_10px_30px_-10px_rgba(0,0,0,.6)]">
-                        <img src="{{ $player->getAvatarUrl() }}" alt="{{ $player->username }}" width="104" height="178">
+                        <x-avatar :player="$player" size="lg" />
                     </div>
                 </div>
                 <div class="flex-1 text-center sm:text-left sm:pt-14 min-w-0">
