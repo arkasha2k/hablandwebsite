@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\News;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -21,6 +22,7 @@ class HomeController extends Controller
         return view('home', [
             'totalUsers'  => User::count(),
             'onlineUsers' => self::onlineCount(),
+            'news'        => News::published()->limit(4)->get(),
             'newest'      => User::orderByDesc('account_created')->limit(8)->get(),
             'richest'     => User::orderByDesc('credits')->limit(8)->get(),
         ]);

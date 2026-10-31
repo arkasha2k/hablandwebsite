@@ -137,6 +137,10 @@
         }
         .card-hover:hover{ transform:translateY(-4px); border-color:rgba(139,92,246,.5); box-shadow:var(--sh-lift); }
 
+        /* ===== Обрезка текста по строкам (карточки новостей) ===== */
+        .line-clamp-2{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+        .line-clamp-4{ display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden; }
+
         /* ===== Поля ввода ===== */
         .field{
             width:100%; padding:.85rem 1.1rem; border-radius:var(--r-md);
@@ -191,6 +195,8 @@
                    class="btn-nav {{ request()->routeIs('home') ? 'is-active' : '' }}">🏠 Главная</a>
                 <a href="{{ route('players.index') }}" @if(request()->routeIs('players.*', 'player.*')) aria-current="page" @endif
                    class="btn-nav {{ request()->routeIs('players.*', 'player.*') ? 'is-active' : '' }}">👥 Игроки</a>
+                <a href="{{ route('news.index') }}" @if(request()->routeIs('news.*')) aria-current="page" @endif
+                   class="btn-nav {{ request()->routeIs('news.*') ? 'is-active' : '' }}">📰 Новости</a>
 
                 {{-- Онлайн — тоже кнопка, клик обновляет счётчик --}}
                 <button type="button" id="onlineBtn" class="btn-nav" title="Обновить счётчик онлайна">
@@ -226,6 +232,8 @@
                    class="btn-nav {{ request()->routeIs('home') ? 'is-active' : '' }}">🏠 Главная</a>
                 <a href="{{ route('players.index') }}" @if(request()->routeIs('players.*', 'player.*')) aria-current="page" @endif
                    class="btn-nav {{ request()->routeIs('players.*', 'player.*') ? 'is-active' : '' }}">👥 Игроки</a>
+                <a href="{{ route('news.index') }}" @if(request()->routeIs('news.*')) aria-current="page" @endif
+                   class="btn-nav {{ request()->routeIs('news.*') ? 'is-active' : '' }}">📰 Новости</a>
                 <button type="button" class="btn-nav" onclick="location.reload()">
                     <span class="dot"></span>&nbsp;Онлайн: <b>{{ \App\Http\Controllers\HomeController::onlineCount() }}</b>
                 </button>

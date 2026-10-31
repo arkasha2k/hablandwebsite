@@ -45,6 +45,29 @@
     </div>
 </section>
 
+{{-- ============ НОВОСТИ ============ --}}
+<section class="reveal mt-16">
+    <div class="flex items-end justify-between mb-6">
+        <h2 class="h2">Новости отеля</h2>
+        @if($news->count())
+            <a href="{{ route('news.index') }}" class="small font-bold text-violet-300 hover:text-fuchsia-300 transition">Все новости →</a>
+        @endif
+    </div>
+
+    @if($news->count() === 0)
+        <div class="card p-8 text-center">
+            <div class="text-4xl mb-3 floaty inline-block">📰</div>
+            <p class="small text-mute">Новостей пока нет — но мы скоро вернёмся с анонсами!</p>
+        </div>
+    @else
+        <div class="grid sm:grid-cols-2 gap-4">
+            @foreach($news as $n)
+                <x-news-card :item="$n" :featured="$loop->first && $n->featured" />
+            @endforeach
+        </div>
+    @endif
+</section>
+
 {{-- ============ ФИЧИ ============ --}}
 <section class="reveal">
     <h2 class="h2 text-center mb-9">Что тебя ждёт</h2>
