@@ -105,6 +105,28 @@
         .btn-ghost:hover{ box-shadow:inset 0 0 0 2px var(--c-primary); background:rgba(139,92,246,.16); }
         .btn-ghost:active{ transform:translateY(3px); }
 
+        /* ===== Кнопки навигации в шапке (все элементы шапки — кнопки) ===== */
+        .btn-nav{
+            display:inline-flex; align-items:center; gap:.45rem;
+            font-family:'Unbounded',sans-serif; font-weight:700; font-size:10px; letter-spacing:.03em;
+            color:#C4B5FD; text-decoration:none; white-space:nowrap; user-select:none;
+            padding:9px 14px; border-radius:var(--r-md); cursor:pointer;
+            background:linear-gradient(180deg,#2A1D4D,#1B1230);
+            box-shadow:0 3px 0 #120B24, inset 0 1px 0 rgba(196,181,253,.14);
+            border:1px solid rgba(139,92,246,.25);
+            transition:transform .1s ease, box-shadow .1s ease, color .15s ease, filter .15s ease;
+        }
+        .btn-nav:hover{ color:#fff; filter:brightness(1.15); }
+        .btn-nav:active{ transform:translateY(2px); box-shadow:0 1px 0 #120B24, inset 0 1px 0 rgba(196,181,253,.14); }
+        .btn-nav.is-active{
+            color:#fff;
+            background:linear-gradient(135deg,#A78BFA,#8B5CF6 55%,#D946EF);
+            box-shadow:0 3px 0 var(--c-primary-d), 0 8px 18px rgba(139,92,246,.35);
+            border-color:transparent; text-shadow:0 1px 0 rgba(0,0,0,.35);
+        }
+        .btn-nav b{ color:#fff; font-weight:800; }
+        .btn-nav .dot{ margin-right:1px; }
+
         /* ===== Карточки ===== */
         .card{
             background:var(--c-secondary);
@@ -153,56 +175,70 @@
 </head>
 <body class="min-h-screen flex flex-col antialiased">
 
-    {{-- ШАПКА --}}
+    {{-- ШАПКА: всё кнопками, включая счётчик онлайна --}}
     <header class="sticky top-0 z-40 border-b border-line bg-ink/85 backdrop-blur-md">
-        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
-            <a href="{{ route('home') }}" class="flex items-center gap-2.5 shrink-0" aria-label="Habland Hotel — на главную">
+        <div class="max-w-6xl mx-auto px-3 md:px-4 h-16 flex items-center justify-between gap-2">
+
+            {{-- Лого --}}
+            <a href="{{ route('home') }}" class="flex items-center gap-2.5 shrink-0 mr-1" aria-label="Habland Hotel — на главную">
                 <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center text-lg shadow-[0_3px_0_#4C1D95]">🏨</span>
-                <span class="font-display text-[13px] font-bold tracking-wide">HABLAND<span class="text-fuchsia-400">HOTEL</span></span>
+                <span class="font-display text-[13px] font-bold tracking-wide hidden sm:block">HABLAND<span class="text-fuchsia-400">HOTEL</span></span>
             </a>
 
-            <nav class="hidden md:flex items-center gap-1 text-sm font-bold text-mute" aria-label="Основная навигация">
+            {{-- Кнопки навигации (десктоп) --}}
+            <nav class="hidden md:flex items-center gap-2" aria-label="Основная навигация">
                 <a href="{{ route('home') }}" @if(request()->routeIs('home')) aria-current="page" @endif
-                   class="px-3 py-2 rounded-lg transition {{ request()->routeIs('home') ? 'text-white bg-white/10' : 'hover:text-white hover:bg-white/5' }}">Главная</a>
-                <a href="{{ route('players.index') }}" @if(request()->routeIs('players.*')) aria-current="page" @endif
-                   class="px-3 py-2 rounded-lg transition {{ request()->routeIs('players.*') ? 'text-white bg-white/10' : 'hover:text-white hover:bg-white/5' }}">Игроки</a>
+                   class="btn-nav {{ request()->routeIs('home') ? 'is-active' : '' }}">🏠 Главная</a>
+                <a href="{{ route('players.index') }}" @if(request()->routeIs('players.*', 'player.*')) aria-current="page" @endif
+                   class="btn-nav {{ request()->routeIs('players.*', 'player.*') ? 'is-active' : '' }}">👥 Игроки</a>
+
+                {{-- Онлайн — тоже кнопка, клик обновляет счётчик --}}
+                <button type="button" id="onlineBtn" class="btn-nav" title="Обновить счётчик онлайна">
+                    <span class="dot"></span>&nbsp;Онлайн: <b id="onlineCount">{{ \App\Http\Controllers\HomeController::onlineCount() }}</b>
+                </button>
+
                 @auth
                     <a href="{{ route('play') }}" @if(request()->routeIs('play')) aria-current="page" @endif
                        class="btn btn-cyan !py-2.5 !px-5 !text-[10px] ml-1">▶ В ИГРУ</a>
                     <a href="{{ route('me') }}" @if(request()->routeIs('me', 'player.show')) aria-current="page" @endif
-                       class="px-3 py-2 rounded-lg transition {{ request()->routeIs('me', 'player.show') ? 'text-white bg-white/10' : 'hover:text-white hover:bg-white/5' }}">Профиль</a>
+                       class="btn-nav {{ request()->routeIs('me', 'player.show') ? 'is-active' : '' }}">🙂 Профиль</a>
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
-                        <button class="btn btn-ghost !py-2.5 !px-5 !text-[10px] ml-1">ВЫХОД</button>
+                        <button class="btn-nav">🚪 Выход</button>
                     </form>
                 @else
                     <a href="{{ route('login') }}" @if(request()->routeIs('login')) aria-current="page" @endif
-                       class="px-3 py-2 rounded-lg transition {{ request()->routeIs('login') ? 'text-white bg-white/10' : 'hover:text-white' }}">Вход</a>
+                       class="btn-nav {{ request()->routeIs('login') ? 'is-active' : '' }}">🔑 Вход</a>
                     <a href="{{ route('register') }}" class="btn !py-2.5 !px-5 !text-[10px] ml-1">ИГРАТЬ</a>
                 @endauth
             </nav>
 
+            {{-- Мобильный переключатель --}}
             <button id="menuBtn" class="md:hidden w-10 h-10 rounded-lg bg-panel border border-line flex items-center justify-center" aria-expanded="false" aria-controls="mobileMenu" aria-label="Меню">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
             </button>
         </div>
 
+        {{-- Мобильное меню: те же кнопки, складываются в столбик --}}
         <nav id="mobileMenu" class="md:hidden hidden border-t border-line bg-panel/95 backdrop-blur-md" aria-label="Мобильная навигация">
-            <div class="px-4 py-3 flex flex-col gap-1 text-sm font-bold">
+            <div class="px-3 py-3 flex flex-wrap gap-2">
                 <a href="{{ route('home') }}" @if(request()->routeIs('home')) aria-current="page" @endif
-                   class="px-3 py-2.5 rounded-lg transition {{ request()->routeIs('home') ? 'text-white bg-white/10' : 'hover:bg-white/5' }}">Главная</a>
+                   class="btn-nav {{ request()->routeIs('home') ? 'is-active' : '' }}">🏠 Главная</a>
                 <a href="{{ route('players.index') }}" @if(request()->routeIs('players.*', 'player.*')) aria-current="page" @endif
-                   class="px-3 py-2.5 rounded-lg transition {{ request()->routeIs('players.*', 'player.*') ? 'text-white bg-white/10' : 'hover:bg-white/5' }}">Игроки</a>
+                   class="btn-nav {{ request()->routeIs('players.*', 'player.*') ? 'is-active' : '' }}">👥 Игроки</a>
+                <button type="button" class="btn-nav" onclick="location.reload()">
+                    <span class="dot"></span>&nbsp;Онлайн: <b>{{ \App\Http\Controllers\HomeController::onlineCount() }}</b>
+                </button>
                 @auth
-                    <a href="{{ route('play') }}" class="btn btn-cyan w-full mt-2">▶ В ИГРУ</a>
-                    <a href="{{ route('me') }}" class="px-3 py-2.5 rounded-lg hover:bg-white/5 transition">Мой профиль</a>
-                    <form method="POST" action="{{ route('logout') }}">
+                    <a href="{{ route('play') }}" class="btn btn-cyan !py-2.5 !px-5 !text-[10px]">▶ В ИГРУ</a>
+                    <a href="{{ route('me') }}" class="btn-nav">🙂 Мой профиль</a>
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
-                        <button class="btn btn-ghost w-full mt-2">Выйти</button>
+                        <button class="btn-nav">🚪 Выход</button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="px-3 py-2.5 rounded-lg hover:bg-white/5 transition">Вход</a>
-                    <a href="{{ route('register') }}" class="btn w-full mt-2">ИГРАТЬ БЕСПЛАТНО</a>
+                    <a href="{{ route('login') }}" class="btn-nav">🔑 Вход</a>
+                    <a href="{{ route('register') }}" class="btn !py-2.5 !px-5 !text-[10px]">ИГРАТЬ</a>
                 @endauth
             </div>
         </nav>
@@ -230,6 +266,23 @@
             const open = menu.classList.toggle('hidden') === false;
             btn.setAttribute('aria-expanded', open);
         });
+
+        // Кнопка «Онлайн» в шапке: клик подтягивает свежее число из /api/online
+        const onlineBtn = document.getElementById('onlineBtn');
+        const refreshOnline = async () => {
+            try {
+                const d = await (await fetch('/api/online')).json();
+                const el = document.getElementById('onlineCount');
+                if (el) el.textContent = d.online;
+            } catch (e) { /* тихо: оставим прошлое значение */ }
+        };
+        onlineBtn?.addEventListener('click', () => {
+            onlineBtn.disabled = true;
+            refreshOnline().finally(() => { onlineBtn.disabled = false; });
+        });
+        // фоновое автообновление раз в 60 секунд
+        setInterval(refreshOnline, 60000);
+
         const io = new IntersectionObserver((es) => {
             es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
         }, { threshold: .1 });
