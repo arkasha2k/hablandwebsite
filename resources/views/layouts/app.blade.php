@@ -28,7 +28,7 @@
 
     {{-- JSON-LD для поисковиков и мессенджеров --}}
     <script type="application/ld+json">
-    @{{ "@context" }}:"https://schema.org","@type":"WebSite","name":"Habland Hotel","url":"{{ url('/') }}","description":"Пиксельная чат-игра: создай персонажа, построй комнату, найди единомышленников."}
+    @verbatim{"@context":"https://schema.org","@type":"WebSite","name":"Habland Hotel","description":"Пиксельная чат-игра: создай персонажа, построй комнату, найди единомышленников.","url":"http://habland.ru"}@endverbatim
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
