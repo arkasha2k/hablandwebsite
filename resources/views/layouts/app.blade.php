@@ -5,6 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Habland Hotel')</title>
     <meta name="description" content="Habland Hotel — пиксельная чат-игра: создай персонажа, построй комнату, найди единомышленников!">
+
+    {{-- ===== Open Graph / Twitter: превью при шаринге ссылок ===== --}}
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Habland Hotel">
+    <meta property="og:title" content="@yield('og_title', 'Habland Hotel — пиксельная чат-игра для своих')">
+    <meta property="og:description" content="@yield('og_description', 'Создай персонажа, построй комнату мечты и найди единомышленников по всей стране! Онлайн: ' . \App\Http\Controllers\HomeController::onlineCount() . ' прямо сейчас.')">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('og-image.svg') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ru_RU">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('og_title', 'Habland Hotel — пиксельная чат-игра для своих')">
+    <meta name="twitter:description" content="@yield('og_description', 'Создай персонажа, построй комнату мечты и найди единомышленников!')">
+    <meta name="twitter:image" content="{{ asset('og-image.svg') }}">
+    <meta name="theme-color" content="#8B5CF6">
+
+    {{-- ===== Favicon (пиксельный отель, SVG — резкий на любом размере) ===== --}}
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('favicon.svg') }}">
+
+    {{-- JSON-LD для поисковиков и мессенджеров --}}
+    <script type="application/ld+json">
+    @{{ "@context" }}:"https://schema.org","@type":"WebSite","name":"Habland Hotel","url":"{{ url('/') }}","description":"Пиксельная чат-игра: создай персонажа, построй комнату, найди единомышленников."}
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Golos+Text:wght@400;600;700;800&display=swap" rel="stylesheet">

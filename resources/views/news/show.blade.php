@@ -2,6 +2,8 @@
 @extends('layouts.app')
 
 @section('title', $item->title . ' — Новости — Habland Hotel')
+@section('og_title', $item->title . ' — Новости Habland Hotel')
+@section('og_description', Str::limit(strip_tags($item->excerpt ?? $item->content), 180))
 
 @section('content')
 <article class="fade-up pt-6 md:pt-10 max-w-3xl mx-auto">

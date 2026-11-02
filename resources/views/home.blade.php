@@ -43,6 +43,14 @@
             <div class="small text-mute font-bold mt-2">комнат</div>
         </div>
     </div>
+
+    {{-- Посещаемость --}}
+    <div class="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 small text-mute">
+        <span>👁 Всего просмотров: <b class="text-violet-200">{{ number_format($visits['total'], 0, ',', ' ') }}</b></span>
+        <span>Сегодня: <b class="text-violet-200">{{ $visits['today'] }}</b> (уник. {{ $visits['today_uv'] }})</span>
+        <span>Вчера: <b class="text-violet-200">{{ $visits['yesterday'] }}</b></span>
+        <span>За неделю: <b class="text-violet-200">{{ number_format($visits['week'], 0, ',', ' ') }}</b></span>
+    </div>
 </section>
 
 {{-- ============ НОВОСТИ ============ --}}
