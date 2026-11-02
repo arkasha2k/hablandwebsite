@@ -164,6 +164,12 @@
         @keyframes floaty{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-7px);} }
         .blink{ animation:blink 1.1s steps(2) infinite; }
         @keyframes blink{ 50%{opacity:0;} }
+        /* Пасхалка Марио: «звёздный» режим шапки */
+        .star-mode{ animation: starCycle .4s steps(2) infinite; }
+        @keyframes starCycle{
+            0%  { filter: hue-rotate(0deg)   brightness(1.3); box-shadow: 0 4px 24px rgba(255,215,0,.45); }
+            100%{ filter: hue-rotate(90deg)  brightness(1.1); box-shadow: 0 4px 24px rgba(232,121,249,.45); }
+        }
         @keyframes fadeUp{ from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:none;} }
         .fade-up{ animation:fadeUp .45s cubic-bezier(.22,1,.36,1) both; }
         .reveal{ opacity:0; transform:translateY(24px); transition:opacity .5s ease, transform .5s cubic-bezier(.22,1,.36,1); }
@@ -184,7 +190,7 @@
         <div class="max-w-6xl mx-auto px-3 md:px-4 h-16 flex items-center justify-between gap-2">
 
             {{-- Лого --}}
-            <a href="{{ route('home') }}" class="flex items-center gap-2.5 shrink-0 mr-1" aria-label="Habland Hotel — на главную">
+            <a href="{{ route('home') }}" id="logoBtn" class="flex items-center gap-2.5 shrink-0 mr-1" aria-label="Habland Hotel — на главную">
                 <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center text-lg shadow-[0_3px_0_#4C1D95]">🏨</span>
                 <span class="font-display text-[13px] font-bold tracking-wide hidden sm:block">HABLAND<span class="text-fuchsia-400">HOTEL</span></span>
             </a>
@@ -263,9 +269,19 @@
     <footer class="border-t border-line py-6">
         <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2 small text-mute">
             <span class="font-display text-[10px] tracking-wide">© {{ date('Y') }} HABLAND HOTEL</span>
-            <span>Пиксельная чат-игра · Laravel {{ app()->version() }}</span>
+            {{-- Пасхалка Portal: клик по тексту открывает торт --}}
+            <a href="#" id="cakeLink" title="" class="hover:text-hot transition-colors">Торт — ложь · Пасхалки: <span id="eggsFound">0</span>/5</a>
         </div>
     </footer>
+
+    {{-- Оверлей пасхалок --}}
+    <div id="eggModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/70 p-4" role="dialog" aria-modal="true" aria-labelledby="eggTitle">
+        <div class="bg-panel border border-line rounded-[18px] shadow-[0_12px_40px_rgba(0,0,0,.6)] max-w-md w-full p-6 relative text-mute">
+            <button id="eggClose" class="absolute top-3 right-3 btn-nav px-2 py-1" aria-label="Закрыть">✕</button>
+            <h2 id="eggTitle" class="font-display text-lg font-bold text-fuchsia-400 mb-3"></h2>
+            <p id="eggText" class="text-sm leading-relaxed"></p>
+        </div>
+    </div>
 
     <script>
         const btn = document.getElementById('menuBtn');
@@ -295,6 +311,94 @@
             es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
         }, { threshold: .1 });
         document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+        /* ================= ПАСХАЛКИ ================= */
+        const EGGS = {
+            konami:  { title: '🎮 GTA-режим активирован', text: 'Вы ввели легендарный Konami-код (↑↑↓↓←→←→BA). Как в GTA — вам выдано «оружие массового обаяния», как в Contra — 30 жизней. Отдыхать запрещено!' },
+            mojang:  { title: '⛏️ Крипер не взорвался', text: 'Вы кликнули по логотипу 7 раз. В Mojang за это дали бы… ничего, но мы добрее: +1 к карме и знание того, что вы очень внимательны.' },
+            mario:   { title: '🍄 Super! Вы большая звезда', text: 'Нажатие «*» — как неуязвимость Марио. Теперь следующие 8 секунд вас невозможно «выбить» из отеля (на самом деле нет, но выглядит круто).' },
+            cake:    { title: '🎂 The cake is a lie', text: 'Из Portal: «Торт — это ложь». GLaDOS бы вами гордилась. Торт здесь действительно не обещали.' },
+            zelda:   { title: '🗡️ It\'s dangerous to go alone!', text: 'Ник "link" получает Мастер-меч. Сокровище спрятано в этом сообщении:Take this sword... оно теперь ваше.' },
+        };
+        let found = JSON.parse(localStorage.getItem('hablandEggs') || '[]');
+
+        function unlock(id) {
+            if (!EGGS[id] || found.includes(id)) return;
+            found.push(id);
+            localStorage.setItem('hablandEggs', JSON.stringify(found));
+            showEgg(EGGS[id].title, EGGS[id].text);
+            updateCounter();
+        }
+        function updateCounter() {
+            const el = document.getElementById('eggsFound');
+            if (el) el.textContent = found.length;
+        }
+        updateCounter();
+
+        // Модалка
+        const modal = document.getElementById('eggModal');
+        function showEgg(title, text) {
+            document.getElementById('eggTitle').textContent = title;
+            document.getElementById('eggText').textContent = text;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+        function hideEgg() { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+        document.getElementById('eggClose')?.addEventListener('click', hideEgg);
+        modal?.addEventListener('click', (e) => { if (e.target === modal) hideEgg(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideEgg(); });
+
+        // 1) Konami-код: ↑↑↓↓←→←→BA
+        const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+        let kIdx = 0;
+        document.addEventListener('keydown', (e) => {
+            kIdx = (e.key.toLowerCase() === KONAMI[kIdx]?.toLowerCase()) ? kIdx + 1 : (e.key.toLowerCase() === KONAMI[0] ? 1 : 0);
+            if (kIdx === KONAMI.length) { kIdx = 0; unlock('konami'); confetti(); }
+        });
+
+        // Конфетти для Konami
+        function confetti() {
+            for (let i = 0; i < 60; i++) {
+                const c = document.createElement('div');
+                c.textContent = ['🟨','⭐','🧱','💎','🔥'][i % 5];
+                c.style.cssText = `position:fixed;left:${Math.random()*100}vw;top:-2rem;font-size:${12+Math.random()*14}px;z-index:999;pointer-events:none;transition:transform 2.5s ease-in,opacity 2.5s;`;
+                document.body.appendChild(c);
+                requestAnimationFrame(() => { c.style.transform = `translateY(105vh) rotate(${Math.random()*720-360}deg)`; c.style.opacity = '0'; });
+                setTimeout(() => c.remove(), 2600);
+            }
+        }
+
+        // 2) Логотип: 7 кликов (Mojang-пасхалка с крипером)
+        const logo = document.getElementById('logoBtn');
+        let logoClicks = 0, logoTimer = null;
+        logo?.addEventListener('click', () => {
+            logoClicks++; clearTimeout(logoTimer);
+            logoTimer = setTimeout(() => { logoClicks = 0; }, 2000);
+            if (logoClicks >= 7) { logoClicks = 0; unlock('mojang'); }
+        });
+
+        // 3) Звезда «*» — неуязвимость Марио (8 сек свечения шапки)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '*' && !e.repeat) {
+                unlock('mario');
+                const header = document.querySelector('header');
+                header?.classList.add('star-mode');
+                setTimeout(() => header?.classList.remove('star-mode'), 8000);
+            }
+        });
+
+        // 4) Торт — это ложь (Portal): клик по ссылке в подвале
+        document.getElementById('cakeLink')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            unlock('cake');
+        });
+
+        // 5) Ник "link" — меч из Zelda (проверяем серверную переменку)
+        @auth
+            @if(strtolower(auth()->user()->username) === 'link')
+                unlock('zelda');
+            @endif
+        @endauth
     </script>
 </body>
 </html>
