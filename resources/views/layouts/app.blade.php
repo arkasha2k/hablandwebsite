@@ -270,7 +270,11 @@
         <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2 small text-mute">
             <span class="font-display text-[10px] tracking-wide">© {{ date('Y') }} HABLAND HOTEL</span>
             {{-- Пасхалка Portal: клик по тексту открывает торт --}}
-            <a href="#" id="cakeLink" title="" class="hover:text-hot transition-colors">Торт — ложь · Пасхалки: <span id="eggsFound">0</span>/5</a>
+            <a href="#" id="cakeLink" title="" class="hover:text-hot transition-colors">Торт — ложь · Пасхалки: <span id="eggsFound">0</span>/13</a>
+        </div>
+        {{-- Пасхалка Heroes of Might & Magic: кликабельный скелет в подвале (но не в гостинице!) --}}
+        <div class="max-w-6xl mx-auto px-4 mt-1">
+            <span id="skeletonHint" title="" class="cursor-pointer select-none opacity-25 hover:opacity-90 transition-opacity text-[10px]" aria-hidden="true">☠️</span>
         </div>
     </footer>
 
@@ -282,6 +286,14 @@
             <p id="eggText" class="text-sm leading-relaxed"></p>
         </div>
     </div>
+
+    {{-- Пасхалка WoW: баннер «You are not welcome here!» --}}
+    <div id="invulBanner" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 hidden px-6 py-3 rounded-xl font-display font-bold text-lg text-amber-300 bg-black/85 border-2 border-amber-400/60 shadow-[0_0_30px_rgba(251,191,36,.4)] pointer-events-none text-center">YOU ARE NOT WELCOME HERE!</div>
+
+    {{-- Пасхалка StarCraft: бункер на главной --}}
+    @if(Route::currentRouteName() === 'home')
+    <div id="bunkerBox" class="fixed bottom-4 right-4 z-40 hidden cursor-pointer select-none text-2xl opacity-30 hover:opacity-100 transition-opacity" title="">🏠</div>
+    @endif
 
     <script>
         const btn = document.getElementById('menuBtn');

@@ -80,7 +80,7 @@
         <div class="card card-hover p-7 text-center">
             <div class="text-4xl mb-5 floaty inline-block">🧱</div>
             <h3 class="h3 text-cyan-300 mb-3">Свои комнаты</h3>
-            <p class="small text-mute leading-relaxed">Строй и обставляй комнаты мечты. Кафе, клуб, дворец — ограничение только фантазия.</p>
+            <p class="small text-mute leading-relaxed">Строй и обставляй комнаты мечты. Кафе, клуб, дворец — ограничение только ваша фантазия. А в подвале отеля спрятана одна очень знакомая фраза…</p>
         </div>
         <div class="card card-hover p-7 text-center">
             <div class="text-4xl mb-5 floaty inline-block">🤝</div>
@@ -133,7 +133,9 @@
         <div class="rounded-[17px] px-6 py-12 md:py-16" style="background:#100A1F;">
             <h2 class="h1 !text-2xl sm:!text-3xl md:!text-4xl">Готов начать<br><span class="grad-text">приключение?</span></h2>
             <p class="lead mt-4 mb-9">Регистрация занимает меньше минуты<span class="blink">_</span></p>
+            {{-- Пасхалка Skyrim: 5 кликов по курсору "_" (Fus Ro Dah) --}}
             <a href="{{ route('register') }}" class="btn">▶ ЗАСЕЛИТЬСЯ В ОТЕЛЬ</a>
+            <div><span id="dragonWord" title="" class="cursor-pointer select-none text-mute hover:text-fuchsia-300 transition-colors inline-block blink" aria-hidden="true">_</span></div>
         </div>
     </div>
 </section>
