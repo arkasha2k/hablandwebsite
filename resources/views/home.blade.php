@@ -43,6 +43,37 @@
             <div class="small text-mute font-bold mt-2">комнат</div>
         </div>
     </div>
+
+    {{-- Посещаемость --}}
+    <div class="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-1 small text-mute">
+        <span>👁 Всего просмотров: <b class="text-violet-200">{{ number_format($visits['total'], 0, ',', ' ') }}</b></span>
+        <span>Сегодня: <b class="text-violet-200">{{ $visits['today'] }}</b> (уник. {{ $visits['today_uv'] }})</span>
+        <span>Вчера: <b class="text-violet-200">{{ $visits['yesterday'] }}</b></span>
+        <span>За неделю: <b class="text-violet-200">{{ number_format($visits['week'], 0, ',', ' ') }}</b></span>
+    </div>
+</section>
+
+{{-- ============ НОВОСТИ ============ --}}
+<section class="reveal mt-16">
+    <div class="flex items-end justify-between mb-6">
+        <h2 class="h2">Новости отеля</h2>
+        @if($news->count())
+            <a href="{{ route('news.index') }}" class="small font-bold text-violet-300 hover:text-fuchsia-300 transition">Все новости →</a>
+        @endif
+    </div>
+
+    @if($news->count() === 0)
+        <div class="card p-8 text-center">
+            <div class="text-4xl mb-3 floaty inline-block">📰</div>
+            <p class="small text-mute">Новостей пока нет — но мы скоро вернёмся с анонсами!</p>
+        </div>
+    @else
+        <div class="grid sm:grid-cols-2 gap-4">
+            @foreach($news as $n)
+                <x-news-card :item="$n" :featured="$loop->first && $n->featured" />
+            @endforeach
+        </div>
+    @endif
 </section>
 
 {{-- ============ ФИЧИ ============ --}}
@@ -57,7 +88,7 @@
         <div class="card card-hover p-7 text-center">
             <div class="text-4xl mb-5 floaty inline-block">🧱</div>
             <h3 class="h3 text-cyan-300 mb-3">Свои комнаты</h3>
-            <p class="small text-mute leading-relaxed">Строй и обставляй комнаты мечты. Кафе, клуб, дворец — ограничение только фантазия.</p>
+            <p class="small text-mute leading-relaxed">Строй и обставляй комнаты мечты. Кафе, клуб, дворец — ограничение только ваша фантазия. А в подвале отеля спрятана одна очень знакомая фраза…</p>
         </div>
         <div class="card card-hover p-7 text-center">
             <div class="text-4xl mb-5 floaty inline-block">🤝</div>
@@ -75,13 +106,12 @@
     </div>
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
         @foreach($newest as $p)
-            <a href="{{ route('player.show', $p->username) }}" class="card card-hover p-4 text-center">
+            <a href="{{ route('player.show', $p->username) }}" class="card card-hover p-4 text-center no-underline text-inherit">
                 <div class="floaty inline-block">
-                    <img src="{{ $p->getAvatarUrl() }}" alt="{{ $p->username }}" loading="lazy" width="64" height="110"
-                         class="rounded-xl bg-gradient-to-b from-violet-500/25 to-transparent">
+                    <x-avatar :player="$p" size="md" />
                 </div>
                 <div class="mt-3 font-extrabold text-sm truncate">{{ $p->username }}</div>
-                <div class="small text-mute truncate">«{{ $p->motto }}»</div>
+                <div class="small text-mute truncate">«{{ $p->motto ?: 'Без миссии' }}»</div>
             </a>
         @endforeach
     </div>
@@ -94,7 +124,7 @@
         @foreach($richest as $i => $p)
             <a href="{{ route('player.show', $p->username) }}" class="card card-hover flex items-center gap-3 p-3.5">
                 <span class="w-8 text-center font-display text-sm font-bold {{ $i < 3 ? 'grad-text' : 'text-mute' }}">{{ $i + 1 }}</span>
-                <img src="{{ $p->getAvatarUrl(1) }}" alt="" width="44" height="44" class="rounded-lg bg-violet-500/15" loading="lazy">
+                <x-avatar :player="$p" size="sm" />
                 <span class="min-w-0">
                     <span class="block font-extrabold text-sm truncate">{{ $p->username }}</span>
                     <span class="small text-mute">{{ $p->rank_name }}</span>
@@ -111,7 +141,9 @@
         <div class="rounded-[17px] px-6 py-12 md:py-16" style="background:#100A1F;">
             <h2 class="h1 !text-2xl sm:!text-3xl md:!text-4xl">Готов начать<br><span class="grad-text">приключение?</span></h2>
             <p class="lead mt-4 mb-9">Регистрация занимает меньше минуты<span class="blink">_</span></p>
+            {{-- Пасхалка Skyrim: 5 кликов по курсору "_" (Fus Ro Dah) --}}
             <a href="{{ route('register') }}" class="btn">▶ ЗАСЕЛИТЬСЯ В ОТЕЛЬ</a>
+            <div><span id="dragonWord" title="" class="cursor-pointer select-none text-mute hover:text-fuchsia-300 transition-colors inline-block blink" aria-hidden="true">_</span></div>
         </div>
     </div>
 </section>

@@ -13,7 +13,7 @@ class PlayController extends Controller
      |
      | SSO для Arcturus (Morningstar):
      | 1. Генерируем уникальный билет и пишем его в users.auth_ticket
-     | 2. Передаём билет клиенту в URL: client/index.html?ticket=...
+     | 2. Передаём билет клиенту в URL: client/index.html?sso=...
      | 3. Nitro-клиент отправляет билет эмулятору при подключении,
      |    Arcturus находит юзера по auth_ticket и логинит без пароля.
      | Билет перевыпускается при каждом заходе на /play — старые ссылки умирают.
@@ -30,7 +30,7 @@ class PlayController extends Controller
         $ticket = $this->issueTicket($user);
 
         $clientUrl = asset('client/index.html');
-        $clientUrl .= (str_contains($clientUrl, '?') ? '&' : '?') . 'ticket=' . $ticket;
+        $clientUrl .= (str_contains($clientUrl, '?') ? '&' : '?') . 'sso=' . $ticket;
 
         return view('play', [
             'clientUrl'    => $clientUrl,

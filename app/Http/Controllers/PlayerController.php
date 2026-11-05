@@ -24,11 +24,26 @@ class PlayerController extends Controller
         ]);
     }
 
-    // Список игроков
-    public function index()
+    // Список игроков + поиск по нику / девизу
+    public function index(\Illuminate\Http\Request $request)
     {
+        $query = trim((string) $request->input('q'));
+
+        $players = User::query()
+            ->when($query !== '', function ($builder) use ($query) {
+                $like = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $query) . '%';
+                $builder->where(function ($sub) use ($like) {
+                    $sub->where('username', 'like', $like)
+                        ->orWhere('motto', 'like', $like);
+                });
+            })
+            ->orderByDesc('account_created')
+            ->paginate(20)
+            ->withQueryString(); // сохраняет ?q= при переходе между страницами
+
         return view('player.index', [
-            'players' => User::orderByDesc('account_created')->paginate(20),
+            'players' => $players,
+            'query'   => $query,
         ]);
     }
 }

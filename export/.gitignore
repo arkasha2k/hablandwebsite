@@ -1,0 +1,8 @@
+/bootstrap/cache/*.php
+/storage/logs/.gitignore
+/storage/framework/.gitignore
+/storage/app/.gitignore
+composer.lock
+/vendor/
+.env
+database/*.sqlite
