@@ -11,7 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // 🆕 Алиас для админки: 'staff' => только rank >= 4
+        $middleware->alias([
+            'staff' => \App\Http\Middleware\EnsureStaff::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

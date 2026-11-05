@@ -239,6 +239,11 @@
                        class="btn btn-cyan !py-2.5 !px-5 !text-[10px] ml-1">▶ В ИГРУ</a>
                     <a href="{{ route('me') }}" @if(request()->routeIs('me', 'player.show')) aria-current="page" @endif
                        class="btn-nav {{ request()->routeIs('me', 'player.show') ? 'is-active' : '' }}">🙂 Профиль</a>
+                    {{-- 🆕 Ссылка на админку — только для персонала (rank >= 4) --}}
+                    @if(auth()->user()->rank >= 4)
+                        <a href="{{ route('admin.home') }}" @if(request()->routeIs('admin.*')) aria-current="page" @endif
+                           class="btn-nav {{ request()->routeIs('admin.*') ? 'is-active' : '' }}">🛡 Админка</a>
+                    @endif
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
                         <button class="btn-nav">🚪 Выход</button>
@@ -271,6 +276,9 @@
                 @auth
                     <a href="{{ route('play') }}" class="btn btn-cyan !py-2.5 !px-5 !text-[10px]">▶ В ИГРУ</a>
                     <a href="{{ route('me') }}" class="btn-nav">🙂 Мой профиль</a>
+                    @if(auth()->user()->rank >= 4)
+                        <a href="{{ route('admin.home') }}" class="btn-nav">🛡 Админка</a>
+                    @endif
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
                         <button class="btn-nav">🚪 Выход</button>
