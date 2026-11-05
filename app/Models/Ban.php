@@ -40,6 +40,12 @@ class Ban extends Model
         return $this->ban_expire === 0 || $this->ban_expire > time();
     }
 
+    /** То же как атрибут — для Blade ($ban->is_active) */
+    public function getIsActiveAttribute(): bool
+    {
+        return $this->isActive();
+    }
+
     public function getExpiresAtAttribute(): ?Carbon
     {
         return $this->ban_expire > 0 ? Carbon::createFromTimestamp($this->ban_expire) : null;
